@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="photo-wall">
+    <h2>照片墙</h2>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="upload-section">
+        <a href="{{ url_for('upload_photo') }}" class="button">上传新照片</a>
+    </div>
+    
+    <div class="photo-grid">
+        {% for photo in photos %}
+        <div class="photo-item">
+            <div class="photo-image">
+                <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" 
+                     alt="照片"
+                     onclick="openImageModal(this.src)">
+                <div class="photo-actions">
+                    <form method="POST" action="{{ url_for('delete_photo', photo_id=photo.id) }}" class="delete-form">
+                        <button type="submit" class="delete-button" onclick="return confirm('确定要删除这张照片吗？')">
+                            <span class="delete-icon">×</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="photo-description">
+                <p>{{ photo.description }}</p>
+                <small>{{ photo.upload_date.strftime('%Y-%m-%d') }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- 图片放大模态框 -->
+<div id="imageModal" class="modal">
+    <span class="close-modal" onclick="closeImageModal()">&times;</span>
+    <img id="modalImage" class="modal-content">
+</div>
+
+<style>
+.photo-wall {
+    padding: 20px;
+}
+
+.upload-section {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.photo-item {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.photo-item:hover {
+    transform: translateY(-5px);
+}
+
+.photo-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+}
+
+.photo-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.photo-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.photo-item:hover .photo-actions {
+    opacity: 1;
+}
+
+.delete-button {
+    background: rgba(220, 53, 69, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.delete-button:hover {
+    background: rgba(220, 53, 69, 1);
+}
+
+.delete-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.photo-description {
+    padding: 10px;
+}
+
+.photo-description p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.photo-description small {
+    color: #666;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 90vh;
+    margin: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.close-modal {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    color: #155724;
+    text-align: center;
+}
+</style>
+
+<script>
+function openImageModal(imageSrc) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    modal.style.display = 'flex';
+    modalImg.src = imageSrc;
+    
+    // 禁止背景滚动
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    
+    // 恢复背景滚动
+    document.body.style.overflow = 'auto';
+}
+
+// 点击模态框背景关闭
+document.getElementById('imageModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeImageModal();
+    }
+});
+
+// ESC键关闭模态框
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeImageModal();
+    }
+});
+</script>
+{% endblock %}

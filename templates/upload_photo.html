@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="upload-container">
+    <h2>上传照片</h2>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+        <div class="form-group">
+            <label for="photo">选择照片：</label>
+            <input type="file" id="photo" name="photo" accept="image/*" required>
+            <small class="file-hint">支持的格式：JPG、PNG、GIF</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">描述（可选）：</label>
+            <textarea id="description" name="description" rows="3" placeholder="给照片加个描述吧..."></textarea>
+        </div>
+        
+        <div class="button-group">
+            <button type="submit" class="button">上传</button>
+            <a href="{{ url_for('photos') }}" class="button secondary">返回照片墙</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.upload-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.upload-form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+}
+
+.file-hint {
+    display: block;
+    color: #666;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    font-size: 1em;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+    background: #4CAF50;
+    color: white;
+}
+
+.button.secondary {
+    background: #6c757d;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    color: #155724;
+}
+</style>
+{% endblock %}

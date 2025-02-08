@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="edit-message-container">
+    <h2>编辑留言</h2>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form method="POST" class="edit-message-form">
+        <div class="form-group">
+            <label for="content">留言内容：</label>
+            <textarea id="content" name="content" rows="4" required>{{ message.content }}</textarea>
+        </div>
+        
+        <div class="button-group">
+            <button type="submit" class="button">保存修改</button>
+            <a href="{{ url_for('messages') }}" class="button secondary">取消</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.edit-message-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.edit-message-form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.button.secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    color: #155724;
+}
+</style>
+{% endblock %}
